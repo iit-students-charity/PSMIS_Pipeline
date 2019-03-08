@@ -3,6 +3,7 @@
 #include <vector>
 #include <string>
 #include <math.h>
+#include <chrono>
 
 using namespace std;
 
@@ -278,30 +279,39 @@ int main()
 	}
 
 	fflush(stdin);
+	system("cls");
 
 	Pipeline pipeline(m, A, B);
 
-	//char toWorkContinue = ' ';
+	for (auto i = 0; i < m; i++) {
+		cout << "\n[" << i << "] pair:\n" << pipeline.pairToString(i);
+	}
+
+	char toWorkContinue = ' ';
+	chrono::time_point<chrono::system_clock> start, end;
+	start = chrono::system_clock::now();
 
 	while (true) {
 		pipeline.makeStep();
+		end = std::chrono::system_clock::now();
+		int elapsed_seconds = chrono::duration_cast<chrono::seconds>(end - start).count();
 
-		cout << "\n\n...STEP " << pipeline.getClock() << "...";
+		cout << "\n\n\t\tSTEP " << pipeline.getClock();
 
-		cout << "\n\n----------Processing pair of numbers";
-		cout << '\n' << pipeline.processingPairToString();
+		cout << "\n\n----------Processing pair index: " << pipeline.getProcessingPairCounter();
+		cout << "\n-------------------Time elapsed: " << to_string(elapsed_seconds) << 's';
 
-		cout << "\n\n----------Partial sum---------------";
+		cout << "\n\n--------------------Partial sum:";
 		cout << '\n' << pipeline.partialSumToString();
 
-		cout << "\n\n----------Shifted sum---------------";
+		cout << "\n\n--------------------Shifted sum:";
 		cout << '\n' << pipeline.shiftedSumToString();
 
-		cout << "\n\n----------Partial product-----------";
+		cout << "\n\n----------------Partial product:";
 		cout << '\n' << pipeline.partialProductToString();
 
-		//cout << "\n\nEnter any key to continue the pipeline work...";
-		//cin >> toWorkContinue;
+		cout << "\n\nEnter any key to continue the pipeline work... ";
+		cin >> toWorkContinue;
 
 		if (pipeline.getIsWorkCompleted()) {
 			cout << "\nList of products:\n";
