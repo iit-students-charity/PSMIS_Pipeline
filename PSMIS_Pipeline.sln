@@ -1,0 +1,31 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 15
+VisualStudioVersion = 15.0.28307.271
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "PSMIS_Pipeline", "PSMIS_Pipeline\PSMIS_Pipeline.vcxproj", "{EB41C68B-E439-4078-8441-C95C9021CF99}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|x64 = Debug|x64
+		Debug|x86 = Debug|x86
+		Release|x64 = Release|x64
+		Release|x86 = Release|x86
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{EB41C68B-E439-4078-8441-C95C9021CF99}.Debug|x64.ActiveCfg = Debug|x64
+		{EB41C68B-E439-4078-8441-C95C9021CF99}.Debug|x64.Build.0 = Debug|x64
+		{EB41C68B-E439-4078-8441-C95C9021CF99}.Debug|x86.ActiveCfg = Debug|Win32
+		{EB41C68B-E439-4078-8441-C95C9021CF99}.Debug|x86.Build.0 = Debug|Win32
+		{EB41C68B-E439-4078-8441-C95C9021CF99}.Release|x64.ActiveCfg = Release|x64
+		{EB41C68B-E439-4078-8441-C95C9021CF99}.Release|x64.Build.0 = Release|x64
+		{EB41C68B-E439-4078-8441-C95C9021CF99}.Release|x86.ActiveCfg = Release|Win32
+		{EB41C68B-E439-4078-8441-C95C9021CF99}.Release|x86.Build.0 = Release|Win32
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {A5377F88-9BED-4D02-AE57-4E78BD7D18A6}
+	EndGlobalSection
+EndGlobal
