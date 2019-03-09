@@ -21,6 +21,7 @@ private:
 
 	int sourceNumber; // Исходное десятичное число
 	vector<bool> binaryNumber; // Исходное двоичное число в векторном представлении
+
 public:
 	BinaryNumber(int _sourceNumber = 0, unsigned _p = p) {
 		sourceNumber = _sourceNumber;
@@ -35,11 +36,11 @@ public:
 		else {
 			*this = BinaryNumber(0, _p);
 		}		
-	}
+	} // Конструктор двоичного числа
 
 	int getSourceNumber()const  {
 		return sourceNumber;
-	}
+	} 
 
 	vector<bool> getBinaryNumber()const  {
 		return binaryNumber;
@@ -55,18 +56,18 @@ public:
 
 	static BinaryNumber toExpandP(BinaryNumber _binaryNumber, unsigned _expandP = expandP) {
 		return BinaryNumber(_binaryNumber.getSourceNumber(), _expandP);
-	}
+	} // Получение двоичного числа заданной разрядности из исходного
 
 	BinaryNumber shiftToLeft() {
 		unsigned bnSize = binaryNumber.size();
 		BinaryNumber result(sourceNumber * 2, bnSize);
 
 		return result;
-	}
+	} // Создание двоичного числа, полученного сдвигом исходного на один разряд влево
 
 	static BinaryNumber sum(BinaryNumber _a, BinaryNumber _b) {
 		return BinaryNumber(_a.getSourceNumber() + _b.getSourceNumber(), _a.getBinaryNumber().size());
-	}
+	} // Получение суммы двух двоичных чисел
 
 	string toString() {
 		string result = "";
@@ -106,7 +107,7 @@ public:
 		}
 
 		return result;
-	}
+	} // Форматированный вывод двоичного числа
 };
 
 class Pipeline {
@@ -203,7 +204,7 @@ public:
 		}
 
 		return A[_numberOfPair].toString() + '\n' + B[_numberOfPair].toString();
-	}
+	} // Форматированное представление пары двоичных чисел
 
 	string processingPairToString() {
 		return pairToString(processingPairCounter);
@@ -230,7 +231,7 @@ public:
 		}
 
 		return result;
-	}
+	} // Форматированное представление списка конечных результатов умножения
 
 	unsigned getCClock(unsigned _numberOfProduct)const {
 		return _numberOfProduct < CClocks.size() ? CClocks[_numberOfProduct] : 0;
@@ -245,7 +246,7 @@ public:
 		partialSum = BinaryNumber(0, BinaryNumber::getExpandP());
 		shiftedSum = BinaryNumber(0, BinaryNumber::getExpandP());
 		pCounter = 0;
-	}
+	} // Установка промежуточных полей в ноль
 
 	void makeStep() {		
 		vector<bool> secondBinaryNumber = processingPair.second.getBinaryNumber();		
@@ -287,7 +288,7 @@ public:
 		shiftedSum = partialSum.shiftToLeft();
 
 		tCounter += t;
-	}
+	} // Шаг конвейера
 };
 
 int main()
