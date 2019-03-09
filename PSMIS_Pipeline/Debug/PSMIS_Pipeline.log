@@ -1,8 +1,3 @@
 ﻿C:\Program Files (x86)\Microsoft Visual Studio\2017\Community\Common7\IDE\VC\VCTargets\Microsoft.CppBuild.targets(391,5): warning MSB8028: промежуточный каталог (Debug\) содержит файлы, которые используются совместно с другим проектом (PSMIS_Pipeline.vcxproj).  Это может привести к ошибкам очистки и перестроения.
   PSMIS_Pipeline.cpp
-c:\users\user\source\repos\psmis_pipeline\psmis_pipeline\psmis_pipeline.cpp(297): warning C4244: инициализация: преобразование "_Rep" в "int", возможна потеря данных
-          with
-          [
-              _Rep=__int64
-          ]
-  PSMIS_Pipeline.vcxproj -> C:\Users\User\source\repos\PSMIS_Pipeline\Debug\Pipeline_Console.exe
+  PSMIS_Pipeline.vcxproj -> C:\Users\User\source\repos\PSMIS_pipeline\Debug\Pipeline_Console.exe

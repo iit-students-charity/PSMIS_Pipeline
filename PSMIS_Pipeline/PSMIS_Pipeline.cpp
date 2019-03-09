@@ -1,4 +1,10 @@
-﻿#include "pch.h"
+﻿/* Лабораторная работа 1 по дисциплине МРЗвИС
+	Выполнена студенткой группы 721703
+	БГУИР Стрижич Анжелика Олеговна
+	Разработано консольное приложение с имитацией конвейерной архитектуры для умножения заданного множества пар двоичных чисел 
+*/
+
+#include "pch.h"
 #include <iostream>
 #include <vector>
 #include <string>
@@ -108,47 +114,67 @@ private:
 	const string NO_PAIR_ERR = "No such pair"; // Текст сообщения об отсутствии такой пары чисел
 
 	unsigned m; // Количество обрабатываемых пар
-	unsigned clock = 0; // Счетчик тактов
+	unsigned t; // Количество тактов на каждый шаг конвейера
+	unsigned n; // Максимальное количество шагов конвейера
+
+	unsigned tCounter; // Счетчик тактов
+
 	vector<BinaryNumber> A; // Вектор первых элементов пар
 	vector<BinaryNumber> B; // Вектор вторых элементов пар
 
 	pair<BinaryNumber, BinaryNumber> processingPair; // Обрабатываемая пара
-	unsigned processingPairCounter = 0; // Счетчик обрабатываемых пар
-	unsigned pCounter = 0; // Счетчик разрядов во втором элементе пары
+	unsigned processingPairCounter; // Счетчик обрабатываемых пар
+	unsigned pCounter; // Счетчик разрядов во втором элементе пары
 
 	BinaryNumber partialSum; // Частичная сумма
 	BinaryNumber shiftedSum; // Частичная сумма, сдвинутая на 1 разряд влево
 	BinaryNumber partialProduct; // Частичное произведение
 
-	vector<BinaryNumber> prodList; // Итоговый список результатов умножений
+	vector<BinaryNumber> C; // Итоговый список результатов умножений
+	vector<unsigned> CClocks; // Список тактовых времен получения конечных результатов умножений
 	 
-	bool isWorkCompleted = false; // Флаг завершения работы конвеера
+	bool isWorkCompleted; // Флаг завершения работы конвейера
 
 	void setProcessingPair(unsigned _numberOfPair) {
 		processingPair = pair<BinaryNumber, BinaryNumber>(A[_numberOfPair], B[_numberOfPair]);
-	}
+	} // Установить обрабатываемую пару
 
 public:
-	Pipeline(unsigned _m = 1, vector<BinaryNumber> _A = vector<BinaryNumber>(), vector<BinaryNumber> _B = vector<BinaryNumber>()) {
+	Pipeline(unsigned _m = 1, vector<BinaryNumber> _A = vector<BinaryNumber>(), vector<BinaryNumber> _B = vector<BinaryNumber>(), unsigned _t = 1, unsigned _n = 1) {
 		m = _m;
+		t = _t;
+		n = _n;
+
+		tCounter = 0;
+
 		A = _A;
 		B = _B;
 
 		processingPair = pair<BinaryNumber, BinaryNumber>(A[0], B[0]);
+		processingPairCounter = 0;
+		pCounter = 0;
 
-		partialProduct = BinaryNumber(0, BinaryNumber::getExpandP());
 		partialSum = BinaryNumber(0, BinaryNumber::getExpandP());
 		shiftedSum = BinaryNumber(0, BinaryNumber::getExpandP());
+		partialProduct = BinaryNumber(0, BinaryNumber::getExpandP());
 
-		prodList = vector<BinaryNumber>();
-	}
+		C = vector<BinaryNumber>();
+		CClocks = vector<unsigned>();	
 
-	unsigned getClock()const {
-		return clock;
-	}
+		isWorkCompleted = false;
+
+	} // Конструктор конвейера
 
 	unsigned getM()const {
 		return m;
+	}
+
+	unsigned getTCounter()const {
+		return tCounter;
+	}
+	
+	unsigned getN()const {
+		return n;
 	}
 
 	pair<BinaryNumber, BinaryNumber> getProcessingPair()const {
@@ -169,10 +195,6 @@ public:
 
 	BinaryNumber getShiftedSum()const {
 		return shiftedSum;
-	}
-
-	bool getIsWorkCompleted()const {
-		return isWorkCompleted;
 	}
 
 	string pairToString(unsigned _numberOfPair) {
@@ -203,10 +225,19 @@ public:
 		string result = "";
 
 		for (unsigned i = 0; i < m; i++) {
-			result += (_isDecimalRepresent ? to_string(prodList[i].getSourceNumber()) : prodList[i].toString()) + '\n';
+			result += '[' + to_string(i) + "] " + (_isDecimalRepresent ? to_string(C[i].getSourceNumber()) : C[i].toString()) +
+				"\t| clock: " + to_string(getCClock(i)) + '\n';
 		}
 
 		return result;
+	}
+
+	unsigned getCClock(unsigned _numberOfProduct)const {
+		return _numberOfProduct < CClocks.size() ? CClocks[_numberOfProduct] : 0;
+	}
+
+	bool getIsWorkCompleted()const {
+		return isWorkCompleted;
 	}
 
 	void tempsToZero() {
@@ -216,13 +247,12 @@ public:
 		pCounter = 0;
 	}
 
-	void makeStep() {
-		clock++;
-
+	void makeStep() {		
 		vector<bool> secondBinaryNumber = processingPair.second.getBinaryNumber();		
 
 		if (pCounter == secondBinaryNumber.size()) {
-			prodList.push_back(partialSum);
+			C.push_back(partialSum);
+			CClocks.push_back(tCounter);
 
 			if (++processingPairCounter == m) {
 				isWorkCompleted = true;
@@ -231,6 +261,7 @@ public:
 				setProcessingPair(processingPairCounter);
 			}
 			tempsToZero();
+			tCounter += t;
 
 			return;
 		}
@@ -239,6 +270,7 @@ public:
 			partialSum = BinaryNumber::sum(shiftedSum, partialProduct);
 			partialProduct = shiftedSum = BinaryNumber(0, BinaryNumber::getExpandP());
 			pCounter++;
+			tCounter += t;
 
 			return;
 		}
@@ -253,6 +285,8 @@ public:
 		}
 
 		shiftedSum = partialSum.shiftToLeft();
+
+		tCounter += t;
 	}
 };
 
@@ -261,6 +295,12 @@ int main()
 	int m = 0;
 	cout << "Enter 'm' parameter: ";
 	cin >> m;
+	int t = 0;
+	cout << "Enter 't' parameter: ";
+	cin >> t;
+	int n = 0;
+	cout << "Enter 'n' parameter: ";
+	cin >> n;
 
 	fflush(stdin);
 
@@ -281,25 +321,29 @@ int main()
 	fflush(stdin);
 	system("cls");
 
-	Pipeline pipeline(m, A, B);
+	Pipeline pipeline(m, A, B, t, n);
 
 	for (auto i = 0; i < m; i++) {
 		cout << "\n[" << i << "] pair:\n" << pipeline.pairToString(i);
 	}
 
 	char toWorkContinue = ' ';
-	chrono::time_point<chrono::system_clock> start, end;
-	start = chrono::system_clock::now();
+	unsigned stepCounter = 0;
 
 	while (true) {
 		pipeline.makeStep();
-		end = std::chrono::system_clock::now();
-		int elapsed_seconds = chrono::duration_cast<chrono::seconds>(end - start).count();
 
-		cout << "\n\n\t\tSTEP " << pipeline.getClock();
+		if (pipeline.getIsWorkCompleted()) {
+			cout << "\nList of products:\n";
+			cout << pipeline.productListToString(1);
+
+			break;
+		}
+
+		cout << "\n\n\t\tSTEP " << ++stepCounter;
+		cout << "\nClock: " << pipeline.getTCounter();
 
 		cout << "\n\n----------Processing pair index: " << pipeline.getProcessingPairCounter();
-		cout << "\n-------------------Time elapsed: " << to_string(elapsed_seconds) << 's';
 
 		cout << "\n\n--------------------Partial sum:";
 		cout << '\n' << pipeline.partialSumToString();
@@ -313,9 +357,9 @@ int main()
 		cout << "\n\nEnter any key to continue the pipeline work... ";
 		cin >> toWorkContinue;
 
-		if (pipeline.getIsWorkCompleted()) {
-			cout << "\nList of products:\n";
-			cout << pipeline.productListToString(1);
+		if (stepCounter >= pipeline.getN()) {
+			cout << "\nThe 'n' parameter is less than count of steps needed, C list is not completely full";
+
 			break;
 		}
 	}
