@@ -225,7 +225,7 @@ public:
 	string productListToString(bool _isDecimalRepresent = false) {
 		string result = "";
 
-		for (unsigned i = 0; i < m; i++) {
+		for (unsigned i = 0; i < C.size(); i++) {
 			result += '[' + to_string(i) + "] " + (_isDecimalRepresent ? to_string(C[i].getSourceNumber()) : C[i].toString()) +
 				"\t| clock: " + to_string(getCClock(i)) + '\n';
 		}
@@ -335,8 +335,8 @@ int main()
 		pipeline.makeStep();
 
 		if (pipeline.getIsWorkCompleted()) {
-			cout << "\nList of products:\n";
-			cout << pipeline.productListToString(1);
+			cout << "\nList of products:";
+			cout << '\n' << pipeline.productListToString(1);
 
 			break;
 		}
@@ -360,6 +360,7 @@ int main()
 
 		if (stepCounter >= pipeline.getN()) {
 			cout << "\nThe 'n' parameter is less than count of steps needed, C list is not completely full";
+			cout << '\n' << pipeline.productListToString(1);
 
 			break;
 		}
