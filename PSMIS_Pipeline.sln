@@ -5,6 +5,8 @@ VisualStudioVersion = 15.0.28307.271
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Pipeline_Console", "PSMIS_Pipeline\PSMIS_Pipeline.vcxproj", "{EB41C68B-E439-4078-8441-C95C9021CF99}"
 EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Pipeline_Winform", "Pipeline_Winform\Pipeline_Winform.vcxproj", "{BDBDF63E-01E4-493C-9E9A-B1150C5F5CEA}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|x64 = Debug|x64
@@ -21,6 +23,14 @@ Global
 		{EB41C68B-E439-4078-8441-C95C9021CF99}.Release|x64.Build.0 = Release|x64
 		{EB41C68B-E439-4078-8441-C95C9021CF99}.Release|x86.ActiveCfg = Release|Win32
 		{EB41C68B-E439-4078-8441-C95C9021CF99}.Release|x86.Build.0 = Release|Win32
+		{BDBDF63E-01E4-493C-9E9A-B1150C5F5CEA}.Debug|x64.ActiveCfg = Debug|x64
+		{BDBDF63E-01E4-493C-9E9A-B1150C5F5CEA}.Debug|x64.Build.0 = Debug|x64
+		{BDBDF63E-01E4-493C-9E9A-B1150C5F5CEA}.Debug|x86.ActiveCfg = Debug|Win32
+		{BDBDF63E-01E4-493C-9E9A-B1150C5F5CEA}.Debug|x86.Build.0 = Debug|Win32
+		{BDBDF63E-01E4-493C-9E9A-B1150C5F5CEA}.Release|x64.ActiveCfg = Release|x64
+		{BDBDF63E-01E4-493C-9E9A-B1150C5F5CEA}.Release|x64.Build.0 = Release|x64
+		{BDBDF63E-01E4-493C-9E9A-B1150C5F5CEA}.Release|x86.ActiveCfg = Release|Win32
+		{BDBDF63E-01E4-493C-9E9A-B1150C5F5CEA}.Release|x86.Build.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

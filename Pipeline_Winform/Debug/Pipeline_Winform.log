@@ -1,3 +1,5 @@
-﻿  stdafx.cpp
-  Pipeline_Winform.cpp
-  Pipeline_Winform.vcxproj -> C:\Users\User\source\repos\PSMIS_Pipeline\Debug\Pipeline_Winform.exe
+﻿  BinaryNumber.cpp
+  Pipeline.cpp
+  Создание кода...
+  AssemblyInfo.obj : обнаружен модуль MSIL; для MSIL последовательная компоновка отключена; выполняется полная компоновка
+  Pipeline_Winform.vcxproj -> C:\Users\User\source\repos\PSMIS_pipeline\Debug\Pipeline_Winform.exe

@@ -23,7 +23,7 @@
     <ClCompile Include="pch.cpp">
       <Filter>Исходные файлы</Filter>
     </ClCompile>
-    <ClCompile Include="PSMIS_Pipeline.cpp">
+    <ClCompile Include="Pipeline_Console.cpp">
       <Filter>Исходные файлы</Filter>
     </ClCompile>
   </ItemGroup>
