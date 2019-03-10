@@ -35,7 +35,7 @@ public:
 		else {
 			*this = BinaryNumber(0, _p);
 		}		
-	} // Конструктор двоичного числа
+	}
 
 	int getSourceNumber()const  {
 		return sourceNumber;
@@ -53,21 +53,25 @@ public:
 		return expandP;
 	}
 
+	// Получение двоичного числа заданной разрядности из исходного
 	static BinaryNumber toExpandP(BinaryNumber _binaryNumber, unsigned _expandP = expandP) {
 		return BinaryNumber(_binaryNumber.getSourceNumber(), _expandP);
-	} // Получение двоичного числа заданной разрядности из исходного
+	} 
 
+	// Создание двоичного числа, полученного сдвигом исходного на один разряд влево
 	BinaryNumber shiftToLeft() {
 		unsigned bnSize = binaryNumber.size();
 		BinaryNumber result(sourceNumber * 2, bnSize);
 
 		return result;
-	} // Создание двоичного числа, полученного сдвигом исходного на один разряд влево
+	} 
 
+	// Получение суммы двух двоичных чисел
 	static BinaryNumber sum(BinaryNumber _a, BinaryNumber _b) {
 		return BinaryNumber(_a.getSourceNumber() + _b.getSourceNumber(), _a.getBinaryNumber().size());
-	} // Получение суммы двух двоичных чисел
+	} 
 
+	// Форматированный вывод двоичного числа
 	string toString() {
 		string result = "";
 		unsigned bnSize = binaryNumber.size();
@@ -106,7 +110,7 @@ public:
 		}
 
 		return result;
-	} // Форматированный вывод двоичного числа
+	} 
 };
 
 class ProcessingPair {
@@ -161,6 +165,7 @@ public:
 		return result.toString();
 	}
 
+	// Шаг арифметичской операции
 	void makeStep(unsigned _clock) {
 		if (!isResultNull) {
 			return;
@@ -173,28 +178,37 @@ public:
 			resultClock = _clock;
 			isResultNull = false;
 
+			//partialProduct = shiftedSum = partialSum = NULL;
+
 			return;
 		}
 
 		if (pCounter == secondBinaryNumber.size() - 1) {
 			partialSum = BinaryNumber::sum(shiftedSum, partialProduct);
-			partialProduct = shiftedSum = BinaryNumber(0, BinaryNumber::getExpandP());
+
 			pCounter++;
+
+			partialProduct = BinaryNumber(0, BinaryNumber::getExpandP()); 
+			shiftedSum = BinaryNumber(0, BinaryNumber::getExpandP());
 
 			return;
 		}
 
 		secondBinaryNumber = second.getBinaryNumber();
 
-		if (pCounter < secondBinaryNumber.size() - 1) {
-			partialSum = (pCounter == 0) ? (secondBinaryNumber[pCounter] ? BinaryNumber::toExpandP(first) :
-				BinaryNumber(0, BinaryNumber::getExpandP())) : BinaryNumber::sum(shiftedSum, partialProduct);
-			partialProduct = secondBinaryNumber[++pCounter] ? BinaryNumber::toExpandP(first) :
-				BinaryNumber(0, BinaryNumber::getExpandP());
-		}
+		// Первая операция - суммирование предыдущих сдвинутой суммы и частичного произведения
+		partialSum = (pCounter == 0) ? (secondBinaryNumber[pCounter] ? BinaryNumber::toExpandP(first) :
+			BinaryNumber(0, BinaryNumber::getExpandP())) : BinaryNumber::sum(shiftedSum, partialProduct);
 
-		shiftedSum = partialSum.shiftToLeft();
-	} // Шаг арифметичской операции
+		pCounter++;
+
+		// Вторая операция - умножение pCounter-го разряда второго элемента пары на первый элемент пары
+		partialProduct = secondBinaryNumber[pCounter] ? BinaryNumber::toExpandP(first) :
+			BinaryNumber(0, BinaryNumber::getExpandP());
+		
+		// Третья операция - сдвиг влево на один разряд
+		shiftedSum = partialSum.shiftToLeft(); 
+	} 
 };
 
 class Pipeline {
@@ -212,7 +226,7 @@ private:
 	vector<ProcessingPair> C; // Итоговый список результатов умножений
 
 	unsigned processingPairCounter; // Счетчик обрабатываемых пар
-	vector<ProcessingPair> processingPairs;
+	vector<ProcessingPair> processingPairs; // Текущие обрабатываемые пары
 	 
 	bool isWorkCompleted; // Флаг завершения работы конвейера
 
@@ -233,7 +247,7 @@ public:
 
 		isWorkCompleted = false;
 
-	} // Конструктор конвейера
+	}
 
 	unsigned getM()const {
 		return m;
@@ -263,10 +277,7 @@ public:
 		return A[_numberOfPair].toString() + '\n' + B[_numberOfPair].toString();
 	} // Форматированное представление пары двоичных чисел
 
-	string processingPairToString() {
-		return pairToString(processingPairCounter);
-	}
-
+	// Форматированное представление списка конечных результатов умножения
 	string productListToString(bool _isDecimalRepresent = false) {
 		string result = "";
 
@@ -276,16 +287,21 @@ public:
 		}
 
 		return result;
-	} // Форматированное представление списка конечных результатов умножения
+	} 
 
 	bool getIsWorkCompleted()const {
 		return isWorkCompleted;
 	}
 
-	void makeStep() {		
+	// Шаг конвейера
+	void makeStep() {	
 		if (processingPairCounter < m) {
 			processingPairs.push_back(ProcessingPair(A[processingPairCounter], B[processingPairCounter]));
 			processingPairCounter++;
+		}		
+
+		for (auto i = 0; i < processingPairs.size(); i++) {
+			processingPairs[i].makeStep(clockCounter);
 		}
 
 		if (!processingPairs[processingPairs.size() - 1].getIsResultNull()) {
@@ -298,12 +314,8 @@ public:
 			return;
 		}
 
-		for (auto i = 0; i < processingPairs.size(); i++) {
-			processingPairs[i].makeStep(clockCounter);
-		}
-
 		clockCounter += t;
-	} // Шаг конвейера
+	} 
 };
 
 int main()
@@ -345,6 +357,8 @@ int main()
 
 	unsigned stepCounter = 0;
 
+	cout << "\n\n\tClock\tIndex\tPartial sum\t\tShifted sum\t\tPartial product";
+
 	while (true) {
 		pipeline.makeStep();
 
@@ -355,22 +369,23 @@ int main()
 			break;
 		}
 
-		cout << "\n\n\t\tSTEP " << ++stepCounter;
-		cout << "\nClock: " << pipeline.getClockCounter();
+		cout << "\n\n\tSTEP " << ++stepCounter << "\t***************";
+		cout << "\n\t" << pipeline.getClockCounter();
 
 		vector<ProcessingPair> procPairs = pipeline.getProcessingPairs();
 
 		for (auto i = 0; i < procPairs.size(); i++) {
-			cout << "\n\n----------Processing pair index: " << i;
+			if (!procPairs[i].getIsResultNull()) {
+				continue;
+			}
 
-			cout << "\n\n--------------------Partial sum:";
-			cout << '\n' << procPairs[i].partialSumToString();
+			cout << "\n\t\t" << i;
 
-			cout << "\n\n--------------------Shifted sum:";
-			cout << '\n' << procPairs[i].shiftedSumToString();
+			cout << "\t" << procPairs[i].partialSumToString();
 
-			cout << "\n\n----------------Partial product:";
-			cout << '\n' << procPairs[i].partialProductToString();
+			cout << "\t" << procPairs[i].shiftedSumToString();
+
+			cout << "\t" << procPairs[i].partialProductToString();
 		}
 
 		if (stepCounter >= pipeline.getN()) {
