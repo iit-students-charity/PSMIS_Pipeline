@@ -109,104 +109,40 @@ public:
 	} // Форматированный вывод двоичного числа
 };
 
-class Pipeline {
+class ProcessingPair {
 private:
-	const string NO_PAIR_ERR = "No such pair"; // Текст сообщения об отсутствии такой пары чисел
-
-	unsigned m; // Количество обрабатываемых пар
-	unsigned t; // Количество тактов на каждый шаг конвейера
-	unsigned n; // Максимальное количество шагов конвейера
-
-	unsigned tCounter; // Счетчик тактов
-
-	vector<BinaryNumber> A; // Вектор первых элементов пар
-	vector<BinaryNumber> B; // Вектор вторых элементов пар
-
-	pair<BinaryNumber, BinaryNumber> processingPair; // Обрабатываемая пара
-	unsigned processingPairCounter; // Счетчик обрабатываемых пар
-	unsigned pCounter; // Счетчик разрядов во втором элементе пары
+	BinaryNumber first; // Первое число пары
+	BinaryNumber second; // Второе число пары
 
 	BinaryNumber partialSum; // Частичная сумма
 	BinaryNumber shiftedSum; // Частичная сумма, сдвинутая на 1 разряд влево
 	BinaryNumber partialProduct; // Частичное произведение
+	unsigned pCounter; // Счетчик разрядов во втором элементе пары
 
-	vector<BinaryNumber> C; // Итоговый список результатов умножений
-	vector<unsigned> CClocks; // Список тактовых времен получения конечных результатов умножений
-	 
-	bool isWorkCompleted; // Флаг завершения работы конвейера
+	BinaryNumber result; // Результат операции
+	unsigned resultClock; // Время получения результата операции
 
-	void setProcessingPair(unsigned _numberOfPair) {
-		processingPair = pair<BinaryNumber, BinaryNumber>(A[_numberOfPair], B[_numberOfPair]);
-	} // Установить обрабатываемую пару
-
+	bool isResultNull; // Не получен ли результат операции
 public:
-	Pipeline(unsigned _m = 1, vector<BinaryNumber> _A = vector<BinaryNumber>(), vector<BinaryNumber> _B = vector<BinaryNumber>(), unsigned _t = 1, unsigned _n = 1) {
-		m = _m;
-		t = _t;
-		n = _n;
+	ProcessingPair(BinaryNumber _first, BinaryNumber _second) {
+		first = _first;
+		second = _second;
 
-		tCounter = 0;
+		partialSum = shiftedSum = partialProduct = result = BinaryNumber(0, BinaryNumber::getExpandP());
+		pCounter = resultClock = 0;
+		isResultNull = true;
+	} // Конструктор обрабатываемой пары
 
-		A = _A;
-		B = _B;
-
-		processingPair = pair<BinaryNumber, BinaryNumber>(A[0], B[0]);
-		processingPairCounter = 0;
-		pCounter = 0;
-
-		partialSum = BinaryNumber(0, BinaryNumber::getExpandP());
-		shiftedSum = BinaryNumber(0, BinaryNumber::getExpandP());
-		partialProduct = BinaryNumber(0, BinaryNumber::getExpandP());
-
-		C = vector<BinaryNumber>();
-		CClocks = vector<unsigned>();	
-
-		isWorkCompleted = false;
-
-	} // Конструктор конвейера
-
-	unsigned getM()const {
-		return m;
+	BinaryNumber getResult()const {
+		return result;
 	}
 
-	unsigned getTCounter()const {
-		return tCounter;
-	}
-	
-	unsigned getN()const {
-		return n;
+	unsigned getResultClock()const {
+		return resultClock;
 	}
 
-	pair<BinaryNumber, BinaryNumber> getProcessingPair()const {
-		return processingPair;
-	}
-
-	unsigned getProcessingPairCounter()const {
-		return processingPairCounter;
-	}
-
-	BinaryNumber getPartialProduct()const {
-		return partialProduct;
-	}
-
-	BinaryNumber getPartialSum()const {
-		return partialSum;
-	}
-
-	BinaryNumber getShiftedSum()const {
-		return shiftedSum;
-	}
-
-	string pairToString(unsigned _numberOfPair) {
-		if (_numberOfPair >= m || _numberOfPair < 0) {
-			return NO_PAIR_ERR;
-		}
-
-		return A[_numberOfPair].toString() + '\n' + B[_numberOfPair].toString();
-	} // Форматированное представление пары двоичных чисел
-
-	string processingPairToString() {
-		return pairToString(processingPairCounter);
+	bool getIsResultNull()const {
+		return isResultNull;
 	}
 
 	string partialProductToString() {
@@ -221,72 +157,152 @@ public:
 		return shiftedSum.toString();
 	}
 
+	string resultToString() {
+		return result.toString();
+	}
+
+	void makeStep(unsigned _clock) {
+		if (!isResultNull) {
+			return;
+		}
+
+		vector<bool> secondBinaryNumber = second.getBinaryNumber();
+
+		if (pCounter == secondBinaryNumber.size()) {
+			result = partialSum;
+			resultClock = _clock;
+			isResultNull = false;
+
+			return;
+		}
+
+		if (pCounter == secondBinaryNumber.size() - 1) {
+			partialSum = BinaryNumber::sum(shiftedSum, partialProduct);
+			partialProduct = shiftedSum = BinaryNumber(0, BinaryNumber::getExpandP());
+			pCounter++;
+
+			return;
+		}
+
+		secondBinaryNumber = second.getBinaryNumber();
+
+		if (pCounter < secondBinaryNumber.size() - 1) {
+			partialSum = (pCounter == 0) ? (secondBinaryNumber[pCounter] ? BinaryNumber::toExpandP(first) :
+				BinaryNumber(0, BinaryNumber::getExpandP())) : BinaryNumber::sum(shiftedSum, partialProduct);
+			partialProduct = secondBinaryNumber[++pCounter] ? BinaryNumber::toExpandP(first) :
+				BinaryNumber(0, BinaryNumber::getExpandP());
+		}
+
+		shiftedSum = partialSum.shiftToLeft();
+	} // Шаг арифметичской операции
+};
+
+class Pipeline {
+private:
+	const string NO_PAIR_ERR = "No such pair"; // Текст сообщения об отсутствии такой пары чисел
+
+	unsigned m; // Количество обрабатываемых пар
+	unsigned t; // Количество тактов на каждый шаг конвейера
+	unsigned n; // Максимальное количество шагов конвейера
+
+	unsigned clockCounter; // Счетчик тактов
+
+	vector<BinaryNumber> A; // Вектор первых элементов пар
+	vector<BinaryNumber> B; // Вектор вторых элементов пар
+	vector<ProcessingPair> C; // Итоговый список результатов умножений
+
+	unsigned processingPairCounter; // Счетчик обрабатываемых пар
+	vector<ProcessingPair> processingPairs;
+	 
+	bool isWorkCompleted; // Флаг завершения работы конвейера
+
+public:
+	Pipeline(vector<BinaryNumber> _A, vector<BinaryNumber> _B, unsigned _m = 1, unsigned _t = 1, unsigned _n = 1) {
+		m = _m;
+		t = _t;
+		n = _n;
+
+		clockCounter = 0;
+
+		A = _A;
+		B = _B;
+		C = vector<ProcessingPair>();
+
+		processingPairCounter = 0;
+		processingPairs = vector<ProcessingPair>();
+
+		isWorkCompleted = false;
+
+	} // Конструктор конвейера
+
+	unsigned getM()const {
+		return m;
+	}
+
+	unsigned getClockCounter()const {
+		return clockCounter;
+	}
+	
+	unsigned getN()const {
+		return n;
+	}
+
+	unsigned getProcessingPairCounter()const {
+		return processingPairCounter;
+	}
+
+	vector<ProcessingPair> getProcessingPairs()const {
+		return processingPairs;
+	}
+
+	string pairToString(unsigned _numberOfPair) {
+		if (_numberOfPair >= m || _numberOfPair < 0) {
+			return NO_PAIR_ERR;
+		}
+
+		return A[_numberOfPair].toString() + '\n' + B[_numberOfPair].toString();
+	} // Форматированное представление пары двоичных чисел
+
+	string processingPairToString() {
+		return pairToString(processingPairCounter);
+	}
+
 	string productListToString(bool _isDecimalRepresent = false) {
 		string result = "";
 
 		for (unsigned i = 0; i < C.size(); i++) {
-			result += '[' + to_string(i) + "] " + (_isDecimalRepresent ? to_string(C[i].getSourceNumber()) : C[i].toString()) +
-				"\t| clock: " + to_string(getCClock(i)) + '\n';
+			result += '[' + to_string(i) + "] " + (_isDecimalRepresent ? to_string(C[i].getResult().getSourceNumber()) : C[i].resultToString()) +
+				"\t\t| clock: " + to_string(C[i].getResultClock()) + '\n';
 		}
 
 		return result;
 	} // Форматированное представление списка конечных результатов умножения
 
-	unsigned getCClock(unsigned _numberOfProduct)const {
-		return _numberOfProduct < CClocks.size() ? CClocks[_numberOfProduct] : 0;
-	}
-
 	bool getIsWorkCompleted()const {
 		return isWorkCompleted;
 	}
 
-	void tempsToZero() {
-		partialProduct = BinaryNumber(0, BinaryNumber::getExpandP());
-		partialSum = BinaryNumber(0, BinaryNumber::getExpandP());
-		shiftedSum = BinaryNumber(0, BinaryNumber::getExpandP());
-		pCounter = 0;
-	} // Установка промежуточных полей в ноль
-
 	void makeStep() {		
-		vector<bool> secondBinaryNumber = processingPair.second.getBinaryNumber();		
-
-		if (pCounter == secondBinaryNumber.size()) {
-			C.push_back(partialSum);
-			CClocks.push_back(tCounter);
-
-			if (++processingPairCounter == m) {
-				isWorkCompleted = true;
-			}
-			else {
-				setProcessingPair(processingPairCounter);
-			}
-			tempsToZero();
-			tCounter += t;
-
-			return;
+		if (processingPairCounter < m) {
+			processingPairs.push_back(ProcessingPair(A[processingPairCounter], B[processingPairCounter]));
+			processingPairCounter++;
 		}
-		
-		if (pCounter == secondBinaryNumber.size() - 1) {
-			partialSum = BinaryNumber::sum(shiftedSum, partialProduct);
-			partialProduct = shiftedSum = BinaryNumber(0, BinaryNumber::getExpandP());
-			pCounter++;
-			tCounter += t;
+
+		if (!processingPairs[processingPairs.size() - 1].getIsResultNull()) {
+			isWorkCompleted = true;
+			for (auto i = 0; i < m; i++) {
+				C.push_back(processingPairs[i]);
+			}
+			clockCounter += t;
 
 			return;
 		}
 
-		secondBinaryNumber = processingPair.second.getBinaryNumber();
-
-		if (pCounter < secondBinaryNumber.size() - 1) {
-			partialSum = (pCounter == 0) ? (secondBinaryNumber[pCounter] ? BinaryNumber::toExpandP(processingPair.first) :
-				BinaryNumber(0, BinaryNumber::getExpandP())) : BinaryNumber::sum(shiftedSum, partialProduct);
-			partialProduct = secondBinaryNumber[++pCounter] ? BinaryNumber::toExpandP(processingPair.first) :
-				BinaryNumber(0, BinaryNumber::getExpandP());
+		for (auto i = 0; i < processingPairs.size(); i++) {
+			processingPairs[i].makeStep(clockCounter);
 		}
 
-		shiftedSum = partialSum.shiftToLeft();
-
-		tCounter += t;
+		clockCounter += t;
 	} // Шаг конвейера
 };
 
@@ -321,44 +337,44 @@ int main()
 	fflush(stdin);
 	system("cls");
 
-	Pipeline pipeline(m, A, B, t, n);
+	Pipeline pipeline(A, B, m, t, n);
 
 	for (auto i = 0; i < m; i++) {
 		cout << "\n[" << i << "] pair:\n" << pipeline.pairToString(i);
 	}
 
-	char toWorkContinue = ' ';
 	unsigned stepCounter = 0;
 
 	while (true) {
 		pipeline.makeStep();
 
 		if (pipeline.getIsWorkCompleted()) {
-			cout << "\nList of products:";
+			cout << "\n\nList of products:";
 			cout << '\n' << pipeline.productListToString(1);
 
 			break;
 		}
 
 		cout << "\n\n\t\tSTEP " << ++stepCounter;
-		cout << "\nClock: " << pipeline.getTCounter();
+		cout << "\nClock: " << pipeline.getClockCounter();
 
-		cout << "\n\n----------Processing pair index: " << pipeline.getProcessingPairCounter();
+		vector<ProcessingPair> procPairs = pipeline.getProcessingPairs();
 
-		cout << "\n\n--------------------Partial sum:";
-		cout << '\n' << pipeline.partialSumToString();
+		for (auto i = 0; i < procPairs.size(); i++) {
+			cout << "\n\n----------Processing pair index: " << i;
 
-		cout << "\n\n--------------------Shifted sum:";
-		cout << '\n' << pipeline.shiftedSumToString();
+			cout << "\n\n--------------------Partial sum:";
+			cout << '\n' << procPairs[i].partialSumToString();
 
-		cout << "\n\n----------------Partial product:";
-		cout << '\n' << pipeline.partialProductToString();
+			cout << "\n\n--------------------Shifted sum:";
+			cout << '\n' << procPairs[i].shiftedSumToString();
 
-		cout << "\n\nEnter any key to continue the pipeline work... ";
-		cin >> toWorkContinue;
+			cout << "\n\n----------------Partial product:";
+			cout << '\n' << procPairs[i].partialProductToString();
+		}
 
 		if (stepCounter >= pipeline.getN()) {
-			cout << "\nThe 'n' parameter is less than count of steps needed, C list is not completely full";
+			cout << "\n\nThe 'n' parameter is less than count of steps needed, C list is not completely full";
 			cout << '\n' << pipeline.productListToString(1);
 
 			break;

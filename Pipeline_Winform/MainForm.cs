@@ -96,6 +96,7 @@ namespace Pipeline_Winform
 
             Pipeline pipeline = new Pipeline(A, B, m, n, t);
 
+
         }
     }
 }
