@@ -5,32 +5,40 @@ VisualStudioVersion = 15.0.28307.271
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Pipeline_Console", "PSMIS_Pipeline\PSMIS_Pipeline.vcxproj", "{EB41C68B-E439-4078-8441-C95C9021CF99}"
 EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Pipeline_Winform", "Pipeline_Winform\Pipeline_Winform.vcxproj", "{BDBDF63E-01E4-493C-9E9A-B1150C5F5CEA}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Pipeline_Winform", "Pipeline_Winform\Pipeline_Winform.csproj", "{645C1288-27AA-4984-9DDB-7AD2F1471A26}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
 		Debug|x64 = Debug|x64
 		Debug|x86 = Debug|x86
+		Release|Any CPU = Release|Any CPU
 		Release|x64 = Release|x64
 		Release|x86 = Release|x86
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{EB41C68B-E439-4078-8441-C95C9021CF99}.Debug|Any CPU.ActiveCfg = Debug|Win32
 		{EB41C68B-E439-4078-8441-C95C9021CF99}.Debug|x64.ActiveCfg = Debug|x64
 		{EB41C68B-E439-4078-8441-C95C9021CF99}.Debug|x64.Build.0 = Debug|x64
 		{EB41C68B-E439-4078-8441-C95C9021CF99}.Debug|x86.ActiveCfg = Debug|Win32
 		{EB41C68B-E439-4078-8441-C95C9021CF99}.Debug|x86.Build.0 = Debug|Win32
+		{EB41C68B-E439-4078-8441-C95C9021CF99}.Release|Any CPU.ActiveCfg = Release|Win32
 		{EB41C68B-E439-4078-8441-C95C9021CF99}.Release|x64.ActiveCfg = Release|x64
 		{EB41C68B-E439-4078-8441-C95C9021CF99}.Release|x64.Build.0 = Release|x64
 		{EB41C68B-E439-4078-8441-C95C9021CF99}.Release|x86.ActiveCfg = Release|Win32
 		{EB41C68B-E439-4078-8441-C95C9021CF99}.Release|x86.Build.0 = Release|Win32
-		{BDBDF63E-01E4-493C-9E9A-B1150C5F5CEA}.Debug|x64.ActiveCfg = Debug|x64
-		{BDBDF63E-01E4-493C-9E9A-B1150C5F5CEA}.Debug|x64.Build.0 = Debug|x64
-		{BDBDF63E-01E4-493C-9E9A-B1150C5F5CEA}.Debug|x86.ActiveCfg = Debug|Win32
-		{BDBDF63E-01E4-493C-9E9A-B1150C5F5CEA}.Debug|x86.Build.0 = Debug|Win32
-		{BDBDF63E-01E4-493C-9E9A-B1150C5F5CEA}.Release|x64.ActiveCfg = Release|x64
-		{BDBDF63E-01E4-493C-9E9A-B1150C5F5CEA}.Release|x64.Build.0 = Release|x64
-		{BDBDF63E-01E4-493C-9E9A-B1150C5F5CEA}.Release|x86.ActiveCfg = Release|Win32
-		{BDBDF63E-01E4-493C-9E9A-B1150C5F5CEA}.Release|x86.Build.0 = Release|Win32
+		{645C1288-27AA-4984-9DDB-7AD2F1471A26}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{645C1288-27AA-4984-9DDB-7AD2F1471A26}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{645C1288-27AA-4984-9DDB-7AD2F1471A26}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{645C1288-27AA-4984-9DDB-7AD2F1471A26}.Debug|x64.Build.0 = Debug|Any CPU
+		{645C1288-27AA-4984-9DDB-7AD2F1471A26}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{645C1288-27AA-4984-9DDB-7AD2F1471A26}.Debug|x86.Build.0 = Debug|Any CPU
+		{645C1288-27AA-4984-9DDB-7AD2F1471A26}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{645C1288-27AA-4984-9DDB-7AD2F1471A26}.Release|Any CPU.Build.0 = Release|Any CPU
+		{645C1288-27AA-4984-9DDB-7AD2F1471A26}.Release|x64.ActiveCfg = Release|Any CPU
+		{645C1288-27AA-4984-9DDB-7AD2F1471A26}.Release|x64.Build.0 = Release|Any CPU
+		{645C1288-27AA-4984-9DDB-7AD2F1471A26}.Release|x86.ActiveCfg = Release|Any CPU
+		{645C1288-27AA-4984-9DDB-7AD2F1471A26}.Release|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
