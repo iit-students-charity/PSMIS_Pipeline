@@ -20,8 +20,8 @@ namespace Pipeline_Winform
         
         private void InitializeComponent()
         {
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle3 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle4 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle1 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle2 = new System.Windows.Forms.DataGridViewCellStyle();
             this.A_Label = new System.Windows.Forms.Label();
             this.A_TextBox = new System.Windows.Forms.TextBox();
             this.B_TextBox = new System.Windows.Forms.TextBox();
@@ -46,7 +46,6 @@ namespace Pipeline_Winform
             this.p5 = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.s6 = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.p6 = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.Column14 = new System.Windows.Forms.DataGridViewTextBoxColumn();
             ((System.ComponentModel.ISupportInitialize)(this.Pipeine_DataGridView)).BeginInit();
             this.SuspendLayout();
             // 
@@ -116,7 +115,7 @@ namespace Pipeline_Winform
             // 
             // Start_Button
             // 
-            this.Start_Button.Location = new System.Drawing.Point(1181, 13);
+            this.Start_Button.Location = new System.Drawing.Point(1084, 13);
             this.Start_Button.Name = "Start_Button";
             this.Start_Button.Size = new System.Drawing.Size(168, 23);
             this.Start_Button.TabIndex = 10;
@@ -127,7 +126,7 @@ namespace Pipeline_Winform
             // Result_ComboBox
             // 
             this.Result_ComboBox.FormattingEnabled = true;
-            this.Result_ComboBox.Location = new System.Drawing.Point(1365, 15);
+            this.Result_ComboBox.Location = new System.Drawing.Point(1268, 15);
             this.Result_ComboBox.Name = "Result_ComboBox";
             this.Result_ComboBox.Size = new System.Drawing.Size(157, 21);
             this.Result_ComboBox.TabIndex = 11;
@@ -140,14 +139,14 @@ namespace Pipeline_Winform
             this.Pipeine_DataGridView.AllowUserToResizeColumns = false;
             this.Pipeine_DataGridView.AllowUserToResizeRows = false;
             this.Pipeine_DataGridView.BackgroundColor = System.Drawing.Color.White;
-            dataGridViewCellStyle3.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
-            dataGridViewCellStyle3.BackColor = System.Drawing.SystemColors.Control;
-            dataGridViewCellStyle3.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
-            dataGridViewCellStyle3.ForeColor = System.Drawing.SystemColors.WindowText;
-            dataGridViewCellStyle3.SelectionBackColor = System.Drawing.SystemColors.Desktop;
-            dataGridViewCellStyle3.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
-            dataGridViewCellStyle3.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
-            this.Pipeine_DataGridView.ColumnHeadersDefaultCellStyle = dataGridViewCellStyle3;
+            dataGridViewCellStyle1.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
+            dataGridViewCellStyle1.BackColor = System.Drawing.SystemColors.Control;
+            dataGridViewCellStyle1.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
+            dataGridViewCellStyle1.ForeColor = System.Drawing.SystemColors.WindowText;
+            dataGridViewCellStyle1.SelectionBackColor = System.Drawing.SystemColors.Desktop;
+            dataGridViewCellStyle1.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
+            dataGridViewCellStyle1.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
+            this.Pipeine_DataGridView.ColumnHeadersDefaultCellStyle = dataGridViewCellStyle1;
             this.Pipeine_DataGridView.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
             this.Pipeine_DataGridView.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] {
             this.Column1,
@@ -162,16 +161,15 @@ namespace Pipeline_Winform
             this.s5,
             this.p5,
             this.s6,
-            this.p6,
-            this.Column14});
-            dataGridViewCellStyle4.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
-            dataGridViewCellStyle4.BackColor = System.Drawing.SystemColors.Window;
-            dataGridViewCellStyle4.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
-            dataGridViewCellStyle4.ForeColor = System.Drawing.SystemColors.ControlText;
-            dataGridViewCellStyle4.SelectionBackColor = System.Drawing.SystemColors.ActiveCaption;
-            dataGridViewCellStyle4.SelectionForeColor = System.Drawing.SystemColors.ControlText;
-            dataGridViewCellStyle4.WrapMode = System.Windows.Forms.DataGridViewTriState.False;
-            this.Pipeine_DataGridView.DefaultCellStyle = dataGridViewCellStyle4;
+            this.p6});
+            dataGridViewCellStyle2.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
+            dataGridViewCellStyle2.BackColor = System.Drawing.SystemColors.Window;
+            dataGridViewCellStyle2.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
+            dataGridViewCellStyle2.ForeColor = System.Drawing.SystemColors.ControlText;
+            dataGridViewCellStyle2.SelectionBackColor = System.Drawing.SystemColors.ActiveCaption;
+            dataGridViewCellStyle2.SelectionForeColor = System.Drawing.SystemColors.ControlText;
+            dataGridViewCellStyle2.WrapMode = System.Windows.Forms.DataGridViewTriState.False;
+            this.Pipeine_DataGridView.DefaultCellStyle = dataGridViewCellStyle2;
             this.Pipeine_DataGridView.Location = new System.Drawing.Point(12, 51);
             this.Pipeine_DataGridView.Name = "Pipeine_DataGridView";
             this.Pipeine_DataGridView.ReadOnly = true;
@@ -179,7 +177,7 @@ namespace Pipeline_Winform
             this.Pipeine_DataGridView.RowTemplate.ReadOnly = true;
             this.Pipeine_DataGridView.RowTemplate.Resizable = System.Windows.Forms.DataGridViewTriState.True;
             this.Pipeine_DataGridView.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
-            this.Pipeine_DataGridView.Size = new System.Drawing.Size(1510, 498);
+            this.Pipeine_DataGridView.Size = new System.Drawing.Size(1413, 498);
             this.Pipeine_DataGridView.TabIndex = 12;
             // 
             // Column1
@@ -286,18 +284,11 @@ namespace Pipeline_Winform
             this.p6.ReadOnly = true;
             this.p6.Width = 110;
             // 
-            // Column14
-            // 
-            this.Column14.Frozen = true;
-            this.Column14.HeaderText = "Result";
-            this.Column14.Name = "Column14";
-            this.Column14.ReadOnly = true;
-            // 
             // MainForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(1534, 561);
+            this.ClientSize = new System.Drawing.Size(1440, 561);
             this.Controls.Add(this.Pipeine_DataGridView);
             this.Controls.Add(this.Result_ComboBox);
             this.Controls.Add(this.Start_Button);
@@ -347,7 +338,6 @@ namespace Pipeline_Winform
         private DataGridViewTextBoxColumn p5;
         private DataGridViewTextBoxColumn s6;
         private DataGridViewTextBoxColumn p6;
-        private DataGridViewTextBoxColumn Column14;
     }
 }
 

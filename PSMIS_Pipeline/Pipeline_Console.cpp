@@ -325,6 +325,12 @@ int main()
 	int m = 0;
 	cout << "Enter 'm' parameter: ";
 	cin >> m;
+
+	if (m <= 0) {
+		cout << "\n'm' parameter is null or less, pipeline wont created";
+		return 0;
+	}
+
 	int t = 0;
 	cout << "Enter 't' parameter: ";
 	cin >> t;
@@ -335,7 +341,7 @@ int main()
 	int b = 0;
 
 	vector<BinaryNumber> A;
-	vector<BinaryNumber> B;
+	vector<BinaryNumber> B;	
 
 	for (auto i = 0; i < m; i++) {
 		cout << "\nEnter a pair of decimal numbers: ";
@@ -356,8 +362,7 @@ int main()
 
 	unsigned stepCounter = 0;
 
-	string stage = "Partial sum\t\tShift & product\t\t";
-	cout << "\n\n\tClock\tIndex\t" << stage << stage << stage << stage << stage << stage;
+	cout << "\n\n\tClock\tIndex\tPartial sum\t\tShift & product\t\t";
 
 	while (stepCounter < BinaryNumber::getExpandP()) {
 		pipeline.makeStep();
@@ -369,6 +374,7 @@ int main()
 			break;
 		}
 
+		cout << "\n\n\tSTEP " << stepCounter + 1 << '\t';
 		cout << "\n\t" << pipeline.getClockCounter();
 
 		vector<ProcessingPair> procPairs = pipeline.getProcessingPairs();
@@ -386,6 +392,8 @@ int main()
 
 			cout << "\t" << procPairs[i].partialProductToString();
 		}
+
+		system("pause > NULL");
 
 		stepCounter++;
 	}
