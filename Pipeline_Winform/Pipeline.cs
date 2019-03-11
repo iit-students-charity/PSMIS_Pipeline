@@ -8,8 +8,7 @@ namespace Pipeline_Winform
 
         private int m; // Количество обрабатываемых пар
         private int t; // Количество тактов на каждый шаг конвейера
-        private int n; // Максимальное количество шагов конвейера
-
+        
         private int clockCounter; // Счетчик тактов
 
         private List<BinaryNumber> A; // Вектор первых элементов пар
@@ -19,13 +18,13 @@ namespace Pipeline_Winform
         private int processingPairCounter; // Счетчик обрабатываемых пар
         private List<ProcessingPair> processingPairs;
 
-        private bool isWorkCompleted; // Флаг завершения работы конвейера
+        private int taskCounter = 0;
+        public static readonly int countOfSubTasks = BinaryNumber.GetExpandP();
 
-        public Pipeline(List<BinaryNumber> _A, List<BinaryNumber> _B, int _m = 1, int _n = 1, int _t = 1)
+        public Pipeline(List<BinaryNumber> _A, List<BinaryNumber> _B, int _m = 1, int _t = 1)
         {
             m = _m;
             t = _t;
-            n = _n;
 
             clockCounter = 0;
 
@@ -35,8 +34,6 @@ namespace Pipeline_Winform
 
             processingPairCounter = 0;
             processingPairs = new List<ProcessingPair>();
-
-            isWorkCompleted = false;
 
         } // Конструктор конвейера
 
@@ -48,17 +45,18 @@ namespace Pipeline_Winform
 		    return clockCounter;
 	    }
 
-        public int GetN() {
-		    return n;
-	    }
-
         public int GetProcessingPairCounter() {
 		    return processingPairCounter;
 	    }
 
-        List<ProcessingPair> GetProcessingPairs() {
+        public List<ProcessingPair> GetProcessingPairs() {
 		    return processingPairs;
 	    }
+
+        public List<ProcessingPair> GetC()
+        {
+            return C;
+        }
 
         public string PairToString(int _numberOfPair)
         {
@@ -70,35 +68,20 @@ namespace Pipeline_Winform
             return A[_numberOfPair].ToString() + '\n' + B[_numberOfPair].ToString();
         } // Форматированное представление пары двоичных чисел
 
-        public bool GetIsWorkCompleted() {
-		    return isWorkCompleted;
-	    }
-
         public void makeStep()
         {
             if (processingPairCounter < m)
             {
-                processingPairs.Add(new ProcessingPair(A[processingPairCounter], B[processingPairCounter]));
+                processingPairs.Add(new ProcessingPair(A[processingPairCounter], B[processingPairCounter], processingPairCounter));
                 processingPairCounter++;
-            }
-
-            if (!processingPairs[processingPairs.Count - 1].GetIsResultNull())
-            {
-                isWorkCompleted = true;
-                for (int i = 0; i < m; i++)
-                {
-                    C.Add(processingPairs[i]);
-                }
-                clockCounter += t;
-
-                return;
             }
 
             for (int i = 0; i < processingPairs.Count; i++)
             {
-                processingPairs[i].makeStep(clockCounter);
+                processingPairs[i].MakeStep(clockCounter);
             }
 
+            taskCounter++;
             clockCounter += t;
         } // Шаг конвейера
     }

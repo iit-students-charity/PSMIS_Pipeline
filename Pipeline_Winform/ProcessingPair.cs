@@ -15,22 +15,39 @@ namespace Pipeline_Winform
         private BinaryNumber result; // Результат операции
         private int resultClock; // Время получения результата операции
 
-        private bool isResultNull; // Не получен ли результат операции
+        private enum ProcType { Shift, SumAndProduct }
+        private ProcType procType;
+        private int rowPosition;
+        private int index;
 
-
-        public ProcessingPair(BinaryNumber _first, BinaryNumber _second)
+        public ProcessingPair(BinaryNumber _first, BinaryNumber _second, int _index)
         {
             first = _first;
             second = _second;
+            procType = ProcType.SumAndProduct;
+            index = _index;
 
             partialSum = new BinaryNumber(0, BinaryNumber.GetExpandP());
             shiftedSum = new BinaryNumber(0, BinaryNumber.GetExpandP());
             partialProduct = new BinaryNumber(0, BinaryNumber.GetExpandP());
-            result = new BinaryNumber(0, BinaryNumber.GetExpandP());
+            result = null;
 
             pCounter = resultClock = 0;
-            isResultNull = true;
         } // Конструктор обрабатываемой пары
+
+        public ProcessingPair()
+        {
+            partialSum = new BinaryNumber(0, BinaryNumber.GetExpandP());
+            shiftedSum = new BinaryNumber(0, BinaryNumber.GetExpandP());
+            partialProduct = new BinaryNumber(0, BinaryNumber.GetExpandP());
+            result = null;
+
+            first = new BinaryNumber();
+            second = new BinaryNumber();
+
+            procType = ProcType.SumAndProduct;
+            pCounter = resultClock = 0;
+        }
 
         public BinaryNumber GetResult() {
 		    return result;
@@ -40,45 +57,45 @@ namespace Pipeline_Winform
 		    return resultClock;
 	    }
 
-        public bool GetIsResultNull() {
-		        return isResultNull;
-	    }
+        public void SetResultClock(int _resultClock)
+        {
+            resultClock = _resultClock;
+        }
 
-        public string partialProductToString()
+        public int GetRowPosition()
+        {
+            return rowPosition;
+        }
+
+        public string PartialProductToString()
         {
             return partialProduct.ToString();
         }
 
-        public string partialSumToString()
+        public string PartialSumToString()
         {
             return partialSum.ToString();
         }
 
-        public string shiftedSumToString()
+        public string ShiftedSumToString()
         {
             return shiftedSum.ToString();
         }
-
-        public string resultToString()
+        
+        // Первая операция - сдвиг влево на один разряд
+        public void Shift()
         {
-            return result.ToString();
+            shiftedSum = partialSum.ShiftToLeft();
         }
 
-        // Шаг арифметичской операции
-        public void makeStep(int _clock)
+        // Вторая операция - получение частичных суммы и произведения
+        public void SumProd()
         {
-            if (!isResultNull)
-            {
-                return;
-            }
-
             List<bool> secondBinaryNumber = second.GetBinaryNumber();
-
+            
             if (pCounter == secondBinaryNumber.Count)
             {
                 result = partialSum;
-                resultClock = _clock;
-                isResultNull = false;
 
                 return;
             }
@@ -97,18 +114,64 @@ namespace Pipeline_Winform
 
             secondBinaryNumber = second.GetBinaryNumber();
 
-            // Первая операция - суммирование предыдущих сдвинутой суммы и частичного произведения
             partialSum = (pCounter == 0) ? (secondBinaryNumber[pCounter] ? BinaryNumber.ToExpandP(first) :
                 new BinaryNumber(0, BinaryNumber.GetExpandP())) : BinaryNumber.Sum(shiftedSum, partialProduct);
 
             pCounter++;
-
-            // Вторая операция - умножение pCounter-го разряда второго элемента пары на первый элемент пары
+            
             partialProduct = secondBinaryNumber[pCounter] ? BinaryNumber.ToExpandP(first) :
                 new BinaryNumber(0, BinaryNumber.GetExpandP());
+        }
 
-            // Третья операция - сдвиг влево на один разряд
-            shiftedSum = partialSum.ShiftToLeft();
-        } 
+        public void MakeStep(int _clockCounter)
+        {
+            if (result != null)
+            {
+                return;
+            }
+
+            if (procType == ProcType.Shift)
+            {
+                Shift();
+
+                procType = ProcType.SumAndProduct;
+            }
+            else
+            {
+                SumProd();
+
+                procType = ProcType.Shift;
+            }
+
+            rowPosition++;
+
+            if (rowPosition == Pipeline.countOfSubTasks)
+            {
+                result = partialSum;
+                resultClock = _clockCounter;
+            }
+        }
+
+        public string TempsToString()
+        {
+            string result = "Index: " + index + "\n";
+
+            if (procType == ProcType.Shift)
+            {
+                result += "S: " + ShiftedSumToString();
+            }
+            else
+            {
+                result += "S: " + PartialSumToString() +
+                    "\nP: " + PartialProductToString();
+            }
+
+            return result;
+        }
+
+        public override string ToString()
+        {
+            return result == null ? "" : result.GetSourceNumber().ToString() + ", t = " + resultClock;
+        }
     }
 }

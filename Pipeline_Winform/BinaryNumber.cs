@@ -16,12 +16,16 @@ namespace Pipeline_Winform
         {
             sourceNumber = _sourceNumber;
             binaryNumber = new List<bool>(_p);
+            for (int i = 0; i < _p; i++)
+            {
+                binaryNumber.Add(false);
+            }
 
             if (sourceNumber < Math.Pow(2, _p))
             {
                 for (int i = _p - 1; _sourceNumber > 0 && i >= 0; i--)
                 {
-                    binaryNumber[i] = (_sourceNumber % 2 == 0);
+                    binaryNumber[i] = (_sourceNumber % 2 == 1);
                     _sourceNumber /= 2;
                 }
             }
@@ -70,7 +74,7 @@ namespace Pipeline_Winform
             return new BinaryNumber(_a.GetSourceNumber() + _b.GetSourceNumber(), _a.GetBinaryNumber().Count);
         } // Получение суммы двух двоичных чисел
 
-        public string ToString()
+        override public string ToString()
         {
             string result = "";
             int bnSize = binaryNumber.Count;

@@ -165,8 +165,8 @@ public:
 		return result.toString();
 	}
 
-	// Шаг арифметичской операции
-	void makeStep(unsigned _clock) {
+	// Первая операция - получение частичной суммы и частичного произведения
+	void sumAndMultiply(unsigned _clock) {
 		if (!isResultNull) {
 			return;
 		}
@@ -178,8 +178,6 @@ public:
 			resultClock = _clock;
 			isResultNull = false;
 
-			//partialProduct = shiftedSum = partialSum = NULL;
-
 			return;
 		}
 
@@ -188,7 +186,7 @@ public:
 
 			pCounter++;
 
-			partialProduct = BinaryNumber(0, BinaryNumber::getExpandP()); 
+			partialProduct = BinaryNumber(0, BinaryNumber::getExpandP());
 			shiftedSum = BinaryNumber(0, BinaryNumber::getExpandP());
 
 			return;
@@ -196,19 +194,19 @@ public:
 
 		secondBinaryNumber = second.getBinaryNumber();
 
-		// Первая операция - суммирование предыдущих сдвинутой суммы и частичного произведения
 		partialSum = (pCounter == 0) ? (secondBinaryNumber[pCounter] ? BinaryNumber::toExpandP(first) :
 			BinaryNumber(0, BinaryNumber::getExpandP())) : BinaryNumber::sum(shiftedSum, partialProduct);
 
 		pCounter++;
 
-		// Вторая операция - умножение pCounter-го разряда второго элемента пары на первый элемент пары
 		partialProduct = secondBinaryNumber[pCounter] ? BinaryNumber::toExpandP(first) :
 			BinaryNumber(0, BinaryNumber::getExpandP());
-		
-		// Третья операция - сдвиг влево на один разряд
-		shiftedSum = partialSum.shiftToLeft(); 
-	} 
+	}
+
+	// Вторая операция - сдвиг влево на один разряд
+	void shiftLeft() {
+		shiftedSum = partialSum.shiftToLeft();
+	}
 };
 
 class Pipeline {
@@ -217,7 +215,6 @@ private:
 
 	unsigned m; // Количество обрабатываемых пар
 	unsigned t; // Количество тактов на каждый шаг конвейера
-	unsigned n; // Максимальное количество шагов конвейера
 
 	unsigned clockCounter; // Счетчик тактов
 
@@ -231,10 +228,10 @@ private:
 	bool isWorkCompleted; // Флаг завершения работы конвейера
 
 public:
-	Pipeline(vector<BinaryNumber> _A, vector<BinaryNumber> _B, unsigned _m = 1, unsigned _t = 1, unsigned _n = 1) {
+	Pipeline(vector<BinaryNumber> _A, vector<BinaryNumber> _B, unsigned _m = 1, unsigned _t = 1) {
 		m = _m;
 		t = _t;
-		n = _n;
+		//n = _n;
 
 		clockCounter = 0;
 
@@ -257,9 +254,9 @@ public:
 		return clockCounter;
 	}
 	
-	unsigned getN()const {
+	/*unsigned getN()const {
 		return n;
-	}
+	}*/
 
 	unsigned getProcessingPairCounter()const {
 		return processingPairCounter;
@@ -295,27 +292,32 @@ public:
 
 	// Шаг конвейера
 	void makeStep() {	
+		for (auto i = 0; i < processingPairs.size(); i++) {
+			processingPairs[i].shiftLeft();
+		}
+
 		if (processingPairCounter < m) {
 			processingPairs.push_back(ProcessingPair(A[processingPairCounter], B[processingPairCounter]));
 			processingPairCounter++;
 		}		
 
 		for (auto i = 0; i < processingPairs.size(); i++) {
-			processingPairs[i].makeStep(clockCounter);
+			processingPairs[i].sumAndMultiply(clockCounter);
 		}
 
+		clockCounter += t;
+
+		checkResults();
+	}
+
+	void checkResults() {
 		if (!processingPairs[processingPairs.size() - 1].getIsResultNull()) {
 			isWorkCompleted = true;
 			for (auto i = 0; i < m; i++) {
 				C.push_back(processingPairs[i]);
 			}
-			clockCounter += t;
-
-			return;
 		}
-
-		clockCounter += t;
-	} 
+	}
 };
 
 int main()
@@ -326,9 +328,6 @@ int main()
 	int t = 0;
 	cout << "Enter 't' parameter: ";
 	cin >> t;
-	int n = 0;
-	cout << "Enter 'n' parameter: ";
-	cin >> n;
 
 	fflush(stdin);
 
@@ -349,7 +348,7 @@ int main()
 	fflush(stdin);
 	system("cls");
 
-	Pipeline pipeline(A, B, m, t, n);
+	Pipeline pipeline(A, B, m, t);
 
 	for (auto i = 0; i < m; i++) {
 		cout << "\n[" << i << "] pair:\n" << pipeline.pairToString(i);
@@ -357,9 +356,10 @@ int main()
 
 	unsigned stepCounter = 0;
 
-	cout << "\n\n\tClock\tIndex\tPartial sum\t\tShifted sum\t\tPartial product";
+	string stage = "Partial sum\t\tShift & product\t\t";
+	cout << "\n\n\tClock\tIndex\t" << stage << stage << stage << stage << stage << stage;
 
-	while (true) {
+	while (stepCounter < BinaryNumber::getExpandP()) {
 		pipeline.makeStep();
 
 		if (pipeline.getIsWorkCompleted()) {
@@ -369,7 +369,6 @@ int main()
 			break;
 		}
 
-		cout << "\n\n\tSTEP " << ++stepCounter << "\t***************";
 		cout << "\n\t" << pipeline.getClockCounter();
 
 		vector<ProcessingPair> procPairs = pipeline.getProcessingPairs();
@@ -388,12 +387,7 @@ int main()
 			cout << "\t" << procPairs[i].partialProductToString();
 		}
 
-		if (stepCounter >= pipeline.getN()) {
-			cout << "\n\nThe 'n' parameter is less than count of steps needed, C list is not completely full";
-			cout << '\n' << pipeline.productListToString(1);
-
-			break;
-		}
+		stepCounter++;
 	}
 
 	return 0;

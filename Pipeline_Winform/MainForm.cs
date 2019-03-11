@@ -58,8 +58,9 @@ namespace Pipeline_Winform
 
         private void Start_Button_Click(object sender, EventArgs e)
         {
+            Pipeine_DataGridView.Rows.Clear();
+
             int m = 0;
-            int n = 0;
             int t = 0;
             List<BinaryNumber> A = new List<BinaryNumber>();
             List<BinaryNumber> B = new List<BinaryNumber>();
@@ -67,7 +68,6 @@ namespace Pipeline_Winform
             try
             {
                 m = int.Parse(m_TextBox.Text);
-                n = int.Parse(n_TextBox.Text);
                 t = int.Parse(t_TextBox.Text);
 
                 string regexPattern = @"\d{1,}";
@@ -92,10 +92,50 @@ namespace Pipeline_Winform
             {
                 new InvalidValuesErrorDialog("Warning", "'m' parameter is not equal to A or B counts, " +
                     "or A and B counts arent equal").Show();
+
+                if (m > A.Count)
+                {
+                    m = A.Count;
+                }
             }
 
-            Pipeline pipeline = new Pipeline(A, B, m, n, t);
+            Pipeline pipeline = new Pipeline(A, B, m, t);
+            int stepCounter = 0;
+            int maxStep = Pipeline.countOfSubTasks;
 
+            Pipeine_DataGridView.AutoSizeRowsMode = DataGridViewAutoSizeRowsMode.AllCells;
+            Pipeine_DataGridView.DefaultCellStyle.WrapMode = DataGridViewTriState.True;
+
+            while (stepCounter < maxStep + m - 1)
+            {
+                pipeline.makeStep();
+                stepCounter++;
+
+                List<object> rowContains = new List<object>();
+                rowContains.Add(pipeline.GetClockCounter());
+                for (int i = 0; i < maxStep + 1; i++)
+                {
+                    rowContains.Add(null);
+                }
+
+                List<ProcessingPair> pipPrP = pipeline.GetProcessingPairs();
+
+                for (int i = 0; i < pipPrP.Count; i++)
+                {
+                    rowContains[pipPrP[i].GetRowPosition()] = pipPrP[i].TempsToString();
+                    
+                    if (pipPrP[i].GetRowPosition() == maxStep)
+                    {
+                        rowContains.Add(pipPrP[i].ToString());
+                    }
+                }
+                
+                Pipeine_DataGridView.Rows.Add(rowContains.ToArray());
+            }
+
+            pipeline.GetC().AddRange(pipeline.GetProcessingPairs());
+
+            Result_ComboBox.DataSource = pipeline.GetC();
         }
     }
 }
