@@ -78,11 +78,11 @@ namespace Pipeline_Winform
 
             for (int i = 0; i < processingPairs.Count; i++)
             {
+                clockCounter += t;
                 processingPairs[i].MakeStep(clockCounter);
             }
 
             taskCounter++;
-            clockCounter += t;
         } // Шаг конвейера
     }
 }
