@@ -76,9 +76,10 @@ namespace Pipeline_Winform
                 processingPairCounter++;
             }
 
+            clockCounter += t; 
+
             for (int i = 0; i < processingPairs.Count; i++)
             {
-                clockCounter += t;
                 processingPairs[i].MakeStep(clockCounter);
             }
 

@@ -362,7 +362,7 @@ int main()
 
 	unsigned stepCounter = 0;
 
-	cout << "\n\n\tClock\tIndex\tPartial sum\t\tShift\t\t\tProduct\t\t";
+	cout << "\n\n\tClock\tIndex\tPartial sum\t\tShift\t\tProduct\t\t";
 
 	while (stepCounter < BinaryNumber::getExpandP()) {
 		pipeline.makeStep();
