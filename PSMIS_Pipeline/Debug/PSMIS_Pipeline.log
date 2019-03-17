@@ -1,7 +1,7 @@
 ﻿C:\Program Files (x86)\Microsoft Visual Studio\2017\Community\Common7\IDE\VC\VCTargets\Microsoft.CppBuild.targets(391,5): warning MSB8028: промежуточный каталог (Debug\) содержит файлы, которые используются совместно с другим проектом (PSMIS_Pipeline.vcxproj).  Это может привести к ошибкам очистки и перестроения.
   Pipeline_Console.cpp
-c:\users\user\source\repos\psmis_pipeline\psmis_pipeline\pipeline_console.cpp(295): warning C4018: <: несоответствие типов со знаком и без знака
-c:\users\user\source\repos\psmis_pipeline\psmis_pipeline\pipeline_console.cpp(304): warning C4018: <: несоответствие типов со знаком и без знака
-c:\users\user\source\repos\psmis_pipeline\psmis_pipeline\pipeline_console.cpp(316): warning C4018: <: несоответствие типов со знаком и без знака
-c:\users\user\source\repos\psmis_pipeline\psmis_pipeline\pipeline_console.cpp(382): warning C4018: <: несоответствие типов со знаком и без знака
+c:\users\user\source\repos\psmis_pipeline\psmis_pipeline\pipeline_console.cpp(306): warning C4018: <: несоответствие типов со знаком и без знака
+c:\users\user\source\repos\psmis_pipeline\psmis_pipeline\pipeline_console.cpp(315): warning C4018: <: несоответствие типов со знаком и без знака
+c:\users\user\source\repos\psmis_pipeline\psmis_pipeline\pipeline_console.cpp(327): warning C4018: <: несоответствие типов со знаком и без знака
+c:\users\user\source\repos\psmis_pipeline\psmis_pipeline\pipeline_console.cpp(392): warning C4018: <: несоответствие типов со знаком и без знака
   PSMIS_Pipeline.vcxproj -> C:\Users\User\source\repos\PSMIS_pipeline\Debug\Pipeline_Console.exe

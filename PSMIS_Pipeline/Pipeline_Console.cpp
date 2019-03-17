@@ -123,6 +123,7 @@ private:
 	BinaryNumber partialProduct; // Частичное произведение
 	unsigned pCounter; // Счетчик разрядов во втором элементе пары
 
+	unsigned stageCounter; // Счетчик этапов
 	BinaryNumber result; // Результат операции
 	unsigned resultClock; // Время получения результата операции
 
@@ -133,7 +134,7 @@ public:
 		second = _second;
 
 		partialSum = shiftedSum = partialProduct = result = BinaryNumber(0, BinaryNumber::getExpandP());
-		pCounter = resultClock = 0;
+		pCounter = resultClock = stageCounter = 0;
 		isResultNull = true;
 	} // Конструктор обрабатываемой пары
 
@@ -147,6 +148,14 @@ public:
 
 	bool getIsResultNull()const {
 		return isResultNull;
+	}
+
+	unsigned getStageCounter()const {
+		return stageCounter;
+	}
+
+	void setStageCounter(unsigned i) {
+		stageCounter += i;
 	}
 
 	string partialProductToString() {
@@ -167,6 +176,8 @@ public:
 
 	// Первая операция - получение частичной суммы и частичного произведения
 	void sumAndMultiply(unsigned _clock) {
+		stageCounter++;
+
 		if (!isResultNull) {
 			return;
 		}
@@ -362,7 +373,7 @@ int main()
 
 	unsigned stepCounter = 0;
 
-	cout << "\n\n\tClock\tIndex\tPartial sum\t\tShift\t\tProduct\t\t";
+	cout << "\n\n\tClock\t\tIndex\tPartial sum\t\tShift\t\t\tProduct\t\t";
 
 	while (stepCounter < BinaryNumber::getExpandP()) {
 		pipeline.makeStep();
@@ -374,8 +385,7 @@ int main()
 			break;
 		}
 
-		cout << "\n\n\tSTEP " << stepCounter + 1 << '\t';
-		cout << "\n\t" << pipeline.getClockCounter();
+		cout << "\n\n\t" << pipeline.getClockCounter();
 
 		vector<ProcessingPair> procPairs = pipeline.getProcessingPairs();
 
@@ -384,7 +394,7 @@ int main()
 				continue;
 			}
 
-			cout << "\n\t\t" << i;
+			cout << "\n\t(stage " << procPairs[i].getStageCounter() << ")\t" << i;
 
 			cout << "\t" << procPairs[i].partialSumToString();
 
